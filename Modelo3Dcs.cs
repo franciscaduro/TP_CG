@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO; 
 
 namespace TrabalhoCG_Prop3
 {
@@ -91,43 +92,128 @@ namespace TrabalhoCG_Prop3
         }
 
         public static Modelo3D CriarEsfera(int stacks = 12, int slices = 20)
+{
+    Modelo3D m = new Modelo3D { Nome = "Esfera" };
+    float raio = 1.0f;
+
+    // Vértices
+    for (int i = 0; i <= stacks; i++)
+    {
+        float phi = (float)Math.PI * i / stacks; // 0 -> PI
+        float y = raio * (float)Math.Cos(phi);
+        float r = raio * (float)Math.Sin(phi);
+
+        for (int j = 0; j < slices; j++)
         {
-            Modelo3D m = new Modelo3D { Nome = "Esfera" };
-            float raio = 1.0f;
+            float theta = 2.0f * (float)Math.PI * j / slices;
+            float x = r * (float)Math.Cos(theta);
+            float z = r * (float)Math.Sin(theta);
 
-            // Vértices
-            for (int i = 0; i <= stacks; i++)
+            m.Vertices.Add(new Vector3D(x, y, z));
+        }
+    }
+
+    // Faces
+    for (int i = 0; i < stacks; i++)
+    {
+        for (int j = 0; j < slices; j++)
+        {
+            int atual = i * slices + j;
+            int prox = i * slices + (j + 1) % slices;
+            int acima = (i + 1) * slices + j;
+            int acimaProx = (i + 1) * slices + (j + 1) % slices;
+
+            m.Faces.Add(new int[] { atual, prox, acimaProx, acima });
+        }
+    }
+
+    return m;
+}
+        public static Modelo3D LerModelo(string caminhoFicheiro)
+        {
+            string ext = Path.GetExtension(caminhoFicheiro).ToLower();
+            if (ext == ".obj")
+                return LerOBJ(caminhoFicheiro);
+            else if (ext == ".txt")
+                return LerTXT(caminhoFicheiro);
+            else
+                throw new Exception("Formato de ficheiro não suportado!");
+        }
+
+        // Leitura OBJ
+        private static Modelo3D LerOBJ(string caminho)
+        {
+            Modelo3D m = new Modelo3D();
+            foreach (string linha in File.ReadAllLines(caminho))
             {
-                float phi = (float)Math.PI * i / stacks; // 0 -> PI
-                float y = raio * (float)Math.Cos(phi);
-                float r = raio * (float)Math.Sin(phi);
-
-                for (int j = 0; j < slices; j++)
+                if (linha.StartsWith("v "))
                 {
-                    float theta = 2.0f * (float)Math.PI * j / slices;
-                    float x = r * (float)Math.Cos(theta);
-                    float z = r * (float)Math.Sin(theta);
-
+                    string[] partes = linha.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    float x = float.Parse(partes[1]);
+                    float y = float.Parse(partes[2]);
+                    float z = float.Parse(partes[3]);
                     m.Vertices.Add(new Vector3D(x, y, z));
                 }
-            }
-
-            // Faces
-            for (int i = 0; i < stacks; i++)
-            {
-                for (int j = 0; j < slices; j++)
+                else if (linha.StartsWith("f "))
                 {
-                    int atual = i * slices + j;
-                    int prox = i * slices + (j + 1) % slices;
-                    int acima = (i + 1) * slices + j;
-                    int acimaProx = (i + 1) * slices + (j + 1) % slices;
+                    string[] partes = linha.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    int[] face = new int[partes.Length - 1];
+                    for (int i = 1; i < partes.Length; i++)
+                    {
+                        // OBJ começa em 1 → converter para 0
+                        string indiceStr = partes[i].Split('/')[0]; // ignora texturas/normais
+                        face[i - 1] = int.Parse(indiceStr) - 1;
+                    }
+                    m.Faces.Add(face);
+                }
+            }
+            return m;
+        }
 
-                    m.Faces.Add(new int[] { atual, prox, acimaProx, acima });
+        // Leitura TXT
+        private static Modelo3D LerTXT(string caminho)
+        {
+            Modelo3D m = new Modelo3D();
+            bool lendoVertices = false;
+            bool lendoFaces = false;
+
+            foreach (string linha in File.ReadAllLines(caminho))
+            {
+                string l = linha.Trim();
+                if (l == "") continue;
+
+                if (l.ToUpper() == "VERTICES")
+                {
+                    lendoVertices = true;
+                    lendoFaces = false;
+                    continue;
+                }
+                else if (l.ToUpper() == "FACES")
+                {
+                    lendoVertices = false;
+                    lendoFaces = true;
+                    continue;
+                }
+
+                if (lendoVertices)
+                {
+                    string[] partes = l.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    float x = float.Parse(partes[0]);
+                    float y = float.Parse(partes[1]);
+                    float z = float.Parse(partes[2]);
+                    m.Vertices.Add(new Vector3D(x, y, z));
+                }
+                else if (lendoFaces)
+                {
+                    string[] partes = l.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    int[] face = new int[partes.Length];
+                    for (int i = 0; i < partes.Length; i++)
+                        face[i] = int.Parse(partes[i]);
+                    m.Faces.Add(face);
                 }
             }
 
             return m;
         }
-
     }
 }

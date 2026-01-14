@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO; 
 
 namespace TrabalhoCG_Prop3
 {
@@ -123,5 +124,28 @@ namespace TrabalhoCG_Prop3
             if (modeloAtual != null)
                 lblArestas.Text = "Arestas Totais: " + modeloAtual.CalcularComprimentoArestas().ToString("F2");
         }
+
+        private void btnCarregarModelo_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = Path.Combine(Application.StartupPath, "Modelos");
+            dlg.Filter = "Ficheiros 3D|*.obj;*.txt";
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    modeloAtual = Modelo3D.LerModelo(dlg.FileName);
+                    AtualizarInfo();
+                    pctBox.Invalidate();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao carregar modelo: " + ex.Message);
+                }
+            }
+        }
+
+
     }
 }
