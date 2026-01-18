@@ -29,6 +29,7 @@ namespace TrabalhoCG_Prop3
             // Iniciar com cubo
             modeloAtual = Modelo3D.CriarCubo();
             AtualizarInfo();
+            AtualizarControlos();
         }
 
         private void ConfigurarControlos()

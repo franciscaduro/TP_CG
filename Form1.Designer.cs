@@ -117,6 +117,7 @@ namespace TrabalhoCG_Prop3
             // Label de arestas
             this.lblArestas.Location = new System.Drawing.Point(640, 290);
             this.lblArestas.Text = "Arestas: 0";
+            lblArestas.AutoSize = true;
 
             // Botão carregar modelo
             this.btnCarregarModelo.Location = new System.Drawing.Point(640, 320);
