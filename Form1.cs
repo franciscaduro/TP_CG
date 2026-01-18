@@ -12,6 +12,8 @@ namespace TrabalhoCG_Prop3
         float anguloY = 0;
         float escala = 80.0f;
         float distCamara = 500f;
+        float raioAtual = 1.0f;
+
 
         public Form1()
         {
@@ -91,6 +93,23 @@ namespace TrabalhoCG_Prop3
             pctBox.Invalidate();
         }
 
+
+        private void trbRaio_Scroll(object sender, EventArgs e)
+        {
+            raioAtual = trbRaio.Value / 10.0f;
+
+            // Recriar o modelo atual com novo raio
+            if (modeloAtual.Nome == "Cone")
+                modeloAtual = Modelo3D.CriarCone(20, raioAtual);
+            else if (modeloAtual.Nome == "Cilindro")
+                modeloAtual = Modelo3D.CriarCilindro(20, raioAtual);
+            else if (modeloAtual.Nome == "Esfera")
+                modeloAtual = Modelo3D.CriarEsfera(12, 20, raioAtual);
+
+            AtualizarInfo();
+            pctBox.Invalidate(); // redesenha em tempo real
+        }
+
         private void btnCubo_Click(object sender, EventArgs e)
         {
             modeloAtual = Modelo3D.CriarCubo();
@@ -100,24 +119,27 @@ namespace TrabalhoCG_Prop3
 
         private void btnCone_Click(object sender, EventArgs e)
         {
-            modeloAtual = Modelo3D.CriarCone();
+            modeloAtual = Modelo3D.CriarCone(20, raioAtual);
             AtualizarInfo();
             pctBox.Invalidate();
         }
+
 
         private void btnCilindro_Click(object sender, EventArgs e)
         {
-            modeloAtual = Modelo3D.CriarCilindro();
+            modeloAtual = Modelo3D.CriarCilindro(20, raioAtual);
             AtualizarInfo();
             pctBox.Invalidate();
         }
 
+
         private void btnEsfera_Click(object sender, EventArgs e)
         {
-            modeloAtual = Modelo3D.CriarEsfera();
+            modeloAtual = Modelo3D.CriarEsfera(12, 20, raioAtual);
             AtualizarInfo();
             pctBox.Invalidate();
         }
+
 
         private void AtualizarInfo()
         {
@@ -145,6 +167,9 @@ namespace TrabalhoCG_Prop3
                 }
             }
         }
+
+        
+
 
 
     }

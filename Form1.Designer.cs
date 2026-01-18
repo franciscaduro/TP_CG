@@ -54,6 +54,19 @@
             this.trbEscala.Value = 10;
             this.trbEscala.Scroll += new System.EventHandler(this.trbEscala_Scroll);
 
+            this.trbRaio = new System.Windows.Forms.TrackBar();
+            ((System.ComponentModel.ISupportInitialize)(this.trbRaio)).BeginInit();
+
+            // trbRaio
+            this.trbRaio.Location = new System.Drawing.Point(640, 350);
+            this.trbRaio.Minimum = 1;
+            this.trbRaio.Maximum = 50;
+            this.trbRaio.Value = 10;
+            this.trbRaio.Scroll += new System.EventHandler(this.trbRaio_Scroll);
+
+            this.Controls.Add(this.trbRaio);
+
+
             // Botões de modelos
             this.btnCubo.Location = new System.Drawing.Point(640, 100);
             this.btnCubo.Text = "Cubo";
@@ -126,5 +139,7 @@
         private System.Windows.Forms.RadioButton rbParalela;
         private System.Windows.Forms.Label lblArestas;
         private System.Windows.Forms.Button btnCarregarModelo;
+        private System.Windows.Forms.TrackBar trbRaio;
+
     }
 }

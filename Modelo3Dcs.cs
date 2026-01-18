@@ -48,87 +48,94 @@ namespace TrabalhoCG_Prop3
             return m;
         }
 
-        public static Modelo3D CriarCilindro(int fatias = 20)
+        public static Modelo3D CriarCilindro(int fatias, float raio)
         {
             Modelo3D m = new Modelo3D { Nome = "Cilindro" };
-            float raio = 1.0f;
             float altura = 2.0f;
+
             for (int i = 0; i < fatias; i++)
             {
                 float theta = 2.0f * (float)Math.PI * i / fatias;
                 float x = raio * (float)Math.Cos(theta);
                 float z = raio * (float)Math.Sin(theta);
+
                 m.Vertices.Add(new Vector3D(x, -altura / 2, z));
                 m.Vertices.Add(new Vector3D(x, altura / 2, z));
             }
+
             for (int i = 0; i < fatias; i++)
             {
                 int b1 = i * 2;
                 int t1 = i * 2 + 1;
                 int b2 = ((i + 1) % fatias) * 2;
                 int t2 = ((i + 1) % fatias) * 2 + 1;
+
                 m.Faces.Add(new int[] { b1, b2, t2, t1 });
             }
+
             return m;
         }
 
-        public static Modelo3D CriarCone(int fatias = 20)
+
+        public static Modelo3D CriarCone(int fatias, float raio)
         {
             Modelo3D m = new Modelo3D { Nome = "Cone" };
-            float raio = 1.0f;
-            m.Vertices.Add(new Vector3D(0, 1, 0)); // Pico
+            m.Vertices.Add(new Vector3D(0, 1, 0)); // pico
+
             for (int i = 0; i < fatias; i++)
             {
                 float theta = 2.0f * (float)Math.PI * i / fatias;
-                m.Vertices.Add(new Vector3D(raio * (float)Math.Cos(theta), -1, raio * (float)Math.Sin(theta)));
+                m.Vertices.Add(new Vector3D(
+                    raio * (float)Math.Cos(theta),
+                    -1,
+                    raio * (float)Math.Sin(theta)));
             }
+
             for (int i = 0; i < fatias; i++)
             {
                 int atual = i + 1;
                 int prox = ((i + 1) % fatias) + 1;
                 m.Faces.Add(new int[] { 0, prox, atual });
             }
+
             return m;
         }
 
-        public static Modelo3D CriarEsfera(int stacks = 12, int slices = 20)
-{
-    Modelo3D m = new Modelo3D { Nome = "Esfera" };
-    float raio = 1.0f;
-
-    // Vértices
-    for (int i = 0; i <= stacks; i++)
-    {
-        float phi = (float)Math.PI * i / stacks; // 0 -> PI
-        float y = raio * (float)Math.Cos(phi);
-        float r = raio * (float)Math.Sin(phi);
-
-        for (int j = 0; j < slices; j++)
+        public static Modelo3D CriarEsfera(int stacks, int slices, float raio)
         {
-            float theta = 2.0f * (float)Math.PI * j / slices;
-            float x = r * (float)Math.Cos(theta);
-            float z = r * (float)Math.Sin(theta);
+            Modelo3D m = new Modelo3D { Nome = "Esfera" };
 
-            m.Vertices.Add(new Vector3D(x, y, z));
+            for (int i = 0; i <= stacks; i++)
+            {
+                float phi = (float)Math.PI * i / stacks;
+                float y = raio * (float)Math.Cos(phi);
+                float r = raio * (float)Math.Sin(phi);
+
+                for (int j = 0; j < slices; j++)
+                {
+                    float theta = 2.0f * (float)Math.PI * j / slices;
+                    float x = r * (float)Math.Cos(theta);
+                    float z = r * (float)Math.Sin(theta);
+                    m.Vertices.Add(new Vector3D(x, y, z));
+                }
+            }
+
+            for (int i = 0; i < stacks; i++)
+            {
+                for (int j = 0; j < slices; j++)
+                {
+                    int a = i * slices + j;
+                    int b = i * slices + (j + 1) % slices;
+                    int c = (i + 1) * slices + (j + 1) % slices;
+                    int d = (i + 1) * slices + j;
+
+                    m.Faces.Add(new int[] { a, b, c, d });
+                }
+            }
+
+            return m;
         }
-    }
 
-    // Faces
-    for (int i = 0; i < stacks; i++)
-    {
-        for (int j = 0; j < slices; j++)
-        {
-            int atual = i * slices + j;
-            int prox = i * slices + (j + 1) % slices;
-            int acima = (i + 1) * slices + j;
-            int acimaProx = (i + 1) * slices + (j + 1) % slices;
-
-            m.Faces.Add(new int[] { atual, prox, acimaProx, acima });
-        }
-    }
-
-    return m;
-}
         public static Modelo3D LerModelo(string caminhoFicheiro)
         {
             string ext = Path.GetExtension(caminhoFicheiro).ToLower();
