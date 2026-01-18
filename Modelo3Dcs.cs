@@ -48,10 +48,9 @@ namespace TrabalhoCG_Prop3
             return m;
         }
 
-        public static Modelo3D CriarCilindro(int fatias, float raio)
+        public static Modelo3D CriarCilindro(int fatias, float raio, float altura)
         {
             Modelo3D m = new Modelo3D { Nome = "Cilindro" };
-            float altura = 2.0f;
 
             for (int i = 0; i < fatias; i++)
             {
@@ -77,17 +76,19 @@ namespace TrabalhoCG_Prop3
         }
 
 
-        public static Modelo3D CriarCone(int fatias, float raio)
+
+        public static Modelo3D CriarCone(int fatias, float raio, float altura)
         {
             Modelo3D m = new Modelo3D { Nome = "Cone" };
-            m.Vertices.Add(new Vector3D(0, 1, 0)); // pico
+
+            m.Vertices.Add(new Vector3D(0, altura / 2, 0)); // pico
 
             for (int i = 0; i < fatias; i++)
             {
                 float theta = 2.0f * (float)Math.PI * i / fatias;
                 m.Vertices.Add(new Vector3D(
                     raio * (float)Math.Cos(theta),
-                    -1,
+                    -altura / 2,
                     raio * (float)Math.Sin(theta)));
             }
 
@@ -100,6 +101,7 @@ namespace TrabalhoCG_Prop3
 
             return m;
         }
+
 
         public static Modelo3D CriarEsfera(int stacks, int slices, float raio)
         {

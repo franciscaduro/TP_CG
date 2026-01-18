@@ -13,6 +13,8 @@ namespace TrabalhoCG_Prop3
         float escala = 80.0f;
         float distCamara = 500f;
         float raioAtual = 1.0f;
+        float alturaAtual = 2.0f;
+
 
 
         public Form1()
@@ -100,15 +102,29 @@ namespace TrabalhoCG_Prop3
 
             // Recriar o modelo atual com novo raio
             if (modeloAtual.Nome == "Cone")
-                modeloAtual = Modelo3D.CriarCone(20, raioAtual);
+                modeloAtual = Modelo3D.CriarCone(20, raioAtual, alturaAtual);
             else if (modeloAtual.Nome == "Cilindro")
-                modeloAtual = Modelo3D.CriarCilindro(20, raioAtual);
+                modeloAtual = Modelo3D.CriarCilindro(20, raioAtual, alturaAtual);
             else if (modeloAtual.Nome == "Esfera")
                 modeloAtual = Modelo3D.CriarEsfera(12, 20, raioAtual);
 
             AtualizarInfo();
             pctBox.Invalidate(); // redesenha em tempo real
         }
+
+        private void trbAltura_Scroll(object sender, EventArgs e)
+        {
+            alturaAtual = trbAltura.Value / 10.0f;
+
+            if (modeloAtual.Nome == "Cone")
+                modeloAtual = Modelo3D.CriarCone(20, raioAtual, alturaAtual);
+            else if (modeloAtual.Nome == "Cilindro")
+                modeloAtual = Modelo3D.CriarCilindro(20, raioAtual, alturaAtual);
+
+            AtualizarInfo();
+            pctBox.Invalidate();
+        }
+
 
         private void btnCubo_Click(object sender, EventArgs e)
         {
@@ -119,18 +135,18 @@ namespace TrabalhoCG_Prop3
 
         private void btnCone_Click(object sender, EventArgs e)
         {
-            modeloAtual = Modelo3D.CriarCone(20, raioAtual);
+            modeloAtual = Modelo3D.CriarCone(20, raioAtual, alturaAtual);
             AtualizarInfo();
             pctBox.Invalidate();
         }
-
 
         private void btnCilindro_Click(object sender, EventArgs e)
         {
-            modeloAtual = Modelo3D.CriarCilindro(20, raioAtual);
+            modeloAtual = Modelo3D.CriarCilindro(20, raioAtual, alturaAtual);
             AtualizarInfo();
             pctBox.Invalidate();
         }
+
 
 
         private void btnEsfera_Click(object sender, EventArgs e)
