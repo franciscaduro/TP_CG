@@ -1,4 +1,10 @@
-﻿namespace TrabalhoCG_Prop3
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+
+namespace TrabalhoCG_Prop3
 {
     partial class Form1
     {
@@ -117,6 +123,33 @@
             this.btnCarregarModelo.Text = "Carregar";
             this.btnCarregarModelo.Click += new System.EventHandler(this.btnCarregarModelo_Click);
 
+            this.nudFatias = new NumericUpDown();
+            this.nudFatias.Minimum = 3;
+            this.nudFatias.Maximum = 100;
+            this.nudFatias.Value = fatias;
+            this.nudFatias.Location = new Point(640, 430);
+            this.nudFatias.ValueChanged += nudFatias_ValueChanged;
+            this.Controls.Add(this.nudFatias);
+
+            this.nudStacks = new NumericUpDown();
+            this.nudStacks.Minimum = 3;
+            this.nudStacks.Maximum = 50;
+            this.nudStacks.Value = stacks;
+            this.nudStacks.Location = new Point(640, 470);
+            this.nudStacks.ValueChanged += nudStacks_ValueChanged;
+            this.Controls.Add(this.nudStacks);
+
+
+            this.nudSlices = new NumericUpDown();
+            this.nudSlices.Minimum = 3;
+            this.nudSlices.Maximum = 50;
+            this.nudSlices.Value = slices;
+            this.nudSlices.Location = new Point(640, 510);
+            this.nudSlices.ValueChanged += nudSlices_ValueChanged;
+            this.Controls.Add(this.nudSlices);
+
+
+
             // Form1
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.pctBox);
@@ -155,6 +188,11 @@
         private System.Windows.Forms.Button btnCarregarModelo;
         private System.Windows.Forms.TrackBar trbRaio;
         private System.Windows.Forms.TrackBar trbAltura;
+        private NumericUpDown nudFatias;
+        private NumericUpDown nudStacks;
+        private NumericUpDown nudSlices;
+
+
 
 
     }

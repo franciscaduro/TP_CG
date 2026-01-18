@@ -14,6 +14,10 @@ namespace TrabalhoCG_Prop3
         float distCamara = 500f;
         float raioAtual = 1.0f;
         float alturaAtual = 2.0f;
+        int fatias = 20;
+        int stacks = 12;
+        int slices = 20;
+
 
 
 
@@ -130,6 +134,7 @@ namespace TrabalhoCG_Prop3
         {
             modeloAtual = Modelo3D.CriarCubo();
             AtualizarInfo();
+            AtualizarControlos();
             pctBox.Invalidate();
         }
 
@@ -137,6 +142,7 @@ namespace TrabalhoCG_Prop3
         {
             modeloAtual = Modelo3D.CriarCone(20, raioAtual, alturaAtual);
             AtualizarInfo();
+            AtualizarControlos();
             pctBox.Invalidate();
         }
 
@@ -144,6 +150,7 @@ namespace TrabalhoCG_Prop3
         {
             modeloAtual = Modelo3D.CriarCilindro(20, raioAtual, alturaAtual);
             AtualizarInfo();
+            AtualizarControlos();
             pctBox.Invalidate();
         }
 
@@ -153,8 +160,48 @@ namespace TrabalhoCG_Prop3
         {
             modeloAtual = Modelo3D.CriarEsfera(12, 20, raioAtual);
             AtualizarInfo();
+            AtualizarControlos();
             pctBox.Invalidate();
         }
+
+
+        private void nudFatias_ValueChanged(object sender, EventArgs e)
+        {
+            fatias = (int)nudFatias.Value;
+
+            if (modeloAtual.Nome == "Cone")
+                modeloAtual = Modelo3D.CriarCone(fatias, raioAtual, alturaAtual);
+            else if (modeloAtual.Nome == "Cilindro")
+                modeloAtual = Modelo3D.CriarCilindro(fatias, raioAtual, alturaAtual);
+
+            AtualizarInfo();
+            pctBox.Invalidate();
+        }
+
+
+        private void nudStacks_ValueChanged(object sender, EventArgs e)
+        {
+            stacks = (int)nudStacks.Value;
+
+            if (modeloAtual.Nome == "Esfera")
+                modeloAtual = Modelo3D.CriarEsfera(stacks, slices, raioAtual);
+
+            AtualizarInfo();
+            pctBox.Invalidate();
+        }
+
+
+        private void nudSlices_ValueChanged(object sender, EventArgs e)
+        {
+            slices = (int)nudSlices.Value;
+
+            if (modeloAtual.Nome == "Esfera")
+                modeloAtual = Modelo3D.CriarEsfera(stacks, slices, raioAtual);
+
+            AtualizarInfo();
+            pctBox.Invalidate();
+        }
+
 
 
         private void AtualizarInfo()
@@ -184,8 +231,27 @@ namespace TrabalhoCG_Prop3
             }
         }
 
-        
 
+
+        private void AtualizarControlos()
+        {
+            nudFatias.Enabled =
+                modeloAtual.Nome == "Cone" ||
+                modeloAtual.Nome == "Cilindro";
+
+            nudStacks.Enabled =
+            nudSlices.Enabled =
+                modeloAtual.Nome == "Esfera";
+
+            trbRaio.Enabled =
+                modeloAtual.Nome == "Cone" ||
+                modeloAtual.Nome == "Cilindro" ||
+                modeloAtual.Nome == "Esfera";
+
+            trbAltura.Enabled =
+                modeloAtual.Nome == "Cone" ||
+                modeloAtual.Nome == "Cilindro";
+        }
 
 
     }
