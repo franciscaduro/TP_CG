@@ -15,8 +15,8 @@ namespace TrabalhoCG_Prop3
         float raioAtual = 1.0f;
         float alturaAtual = 2.0f;
         int fatias = 20;
-        int stacks = 12;
-        int slices = 20;
+        int camadas = 12;
+        int fatiasEsfera = 20;
 
 
 
@@ -61,6 +61,8 @@ namespace TrabalhoCG_Prop3
             else
                 mProj = new Matriz3D(); // Paralela
 
+            Vector3D luz = new Vector3D(1, 1, -0.5f);
+
             Pen caneta = new Pen(Color.Black, 1.5f);
 
             // Desenhar Faces
@@ -80,6 +82,53 @@ namespace TrabalhoCG_Prop3
                 if (pts.Count > 2)
                     g.DrawPolygon(caneta, pts.ToArray());
             }
+
+            // Desenhar Faces com Flat Shading
+            foreach (int[] face in modeloAtual.Faces)
+            {
+                List<PointF> pts = new List<PointF>();
+                foreach (int idx in face)
+                {
+                    Vector3D v = modeloAtual.Vertices[idx];
+                    Vector3D vt = mTransf.Transformar(v); // Transformação Mundo
+                    vt = mProj.Transformar(vt);           // Projeção
+                    pts.Add(new PointF(cx + vt.x, cy - vt.y));
+                }
+
+                if (pts.Count > 2)
+                {
+                    // --- Flat Shading ---
+                    Vector3D normal = CalcularNormalFace(face);
+
+                    // Intensidade da luz (produto escalar normal x luz)
+                    float intensidade = Math.Max(0, normal.x * luz.x + normal.y * luz.y + normal.z * luz.z);
+
+                    // Cor baseada na intensidade
+                    //int cor = (int)(255 * intensidade);
+                    //cor = Math.Max(0, Math.Min(255, cor));
+                    //Brush pincel = new SolidBrush(Color.FromArgb(cor, cor, cor));
+
+                    Color baseCor = Color.Blue;
+                    int r = (int)(baseCor.R * intensidade);
+                    int gC = (int)(baseCor.G * intensidade);
+                    int b = (int)(baseCor.B * intensidade);
+                   
+                    // Preencher face
+
+                    r = Math.Max(0, Math.Min(255, r));
+                    gC = Math.Max(0, Math.Min(255, gC));
+                    b = Math.Max(0, Math.Min(255, b));
+                    Brush pincel = new SolidBrush(Color.FromArgb(r, gC, b));
+
+
+
+                    g.FillPolygon(pincel, pts.ToArray());
+
+                    // Desenhar contorno
+                    g.DrawPolygon(Pens.Black, pts.ToArray());
+                }
+            }
+
         }
 
         // --- EVENTOS ---
@@ -180,24 +229,24 @@ namespace TrabalhoCG_Prop3
         }
 
 
-        private void nudStacks_ValueChanged(object sender, EventArgs e)
+        private void nudCamadas_ValueChanged(object sender, EventArgs e)
         {
-            stacks = (int)nudStacks.Value;
+            camadas = (int)nudCamadas.Value;
 
             if (modeloAtual.Nome == "Esfera")
-                modeloAtual = Modelo3D.CriarEsfera(stacks, slices, raioAtual);
+                modeloAtual = Modelo3D.CriarEsfera(camadas, fatiasEsfera, raioAtual);
 
             AtualizarInfo();
             pctBox.Invalidate();
         }
 
 
-        private void nudSlices_ValueChanged(object sender, EventArgs e)
+        private void nudFatiasEsfera_ValueChanged(object sender, EventArgs e)
         {
-            slices = (int)nudSlices.Value;
+            fatiasEsfera = (int)nudFatiasEsfera.Value;
 
             if (modeloAtual.Nome == "Esfera")
-                modeloAtual = Modelo3D.CriarEsfera(stacks, slices, raioAtual);
+                modeloAtual = Modelo3D.CriarEsfera(camadas, fatiasEsfera, raioAtual);
 
             AtualizarInfo();
             pctBox.Invalidate();
@@ -210,6 +259,27 @@ namespace TrabalhoCG_Prop3
             if (modeloAtual != null)
                 lblArestas.Text = "Arestas Totais: " + modeloAtual.CalcularComprimentoArestas().ToString("F2");
         }
+
+        private Vector3D CalcularNormalFace(int[] face)
+        {
+            Vector3D v0 = modeloAtual.Vertices[face[0]];
+            Vector3D v1 = modeloAtual.Vertices[face[1]];
+            Vector3D v2 = modeloAtual.Vertices[face[2]];
+
+            // Vetores da face
+            Vector3D a = v1 - v0;
+            Vector3D b = v2 - v0;
+
+            // Produto vetorial
+            float nx = a.y * b.z - a.z * b.y;
+            float ny = a.z * b.x - a.x * b.z;
+            float nz = a.x * b.y - a.y * b.x;
+
+            // Normalizar
+            float length = (float)Math.Sqrt(nx * nx + ny * ny + nz * nz);
+            return new Vector3D(nx / length, ny / length, nz / length);
+        }
+
 
         private void btnCarregarModelo_Click(object sender, EventArgs e)
         {
@@ -240,8 +310,8 @@ namespace TrabalhoCG_Prop3
                 modeloAtual.Nome == "Cone" ||
                 modeloAtual.Nome == "Cilindro";
 
-            nudStacks.Enabled =
-            nudSlices.Enabled =
+            nudCamadas.Enabled =
+            nudFatiasEsfera.Enabled =
                 modeloAtual.Nome == "Esfera";
 
             trbRaio.Enabled =

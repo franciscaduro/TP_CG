@@ -132,22 +132,22 @@ namespace TrabalhoCG_Prop3
             this.nudFatias.ValueChanged += nudFatias_ValueChanged;
             this.Controls.Add(this.nudFatias);
 
-            this.nudStacks = new NumericUpDown();
-            this.nudStacks.Minimum = 3;
-            this.nudStacks.Maximum = 50;
-            this.nudStacks.Value = stacks;
-            this.nudStacks.Location = new Point(640, 470);
-            this.nudStacks.ValueChanged += nudStacks_ValueChanged;
-            this.Controls.Add(this.nudStacks);
+            this.nudCamadas = new NumericUpDown();
+            this.nudCamadas.Minimum = 3;
+            this.nudCamadas.Maximum = 50;
+            this.nudCamadas.Value = camadas;
+            this.nudCamadas.Location = new Point(640, 470);
+            this.nudCamadas.ValueChanged += nudCamadas_ValueChanged;
+            this.Controls.Add(this.nudCamadas);
 
 
-            this.nudSlices = new NumericUpDown();
-            this.nudSlices.Minimum = 3;
-            this.nudSlices.Maximum = 50;
-            this.nudSlices.Value = slices;
-            this.nudSlices.Location = new Point(640, 510);
-            this.nudSlices.ValueChanged += nudSlices_ValueChanged;
-            this.Controls.Add(this.nudSlices);
+            this.nudFatiasEsfera = new NumericUpDown();
+            this.nudFatiasEsfera.Minimum = 3;
+            this.nudFatiasEsfera.Maximum = 50;
+            this.nudFatiasEsfera.Value = fatiasEsfera;
+            this.nudFatiasEsfera.Location = new Point(640, 510);
+            this.nudFatiasEsfera.ValueChanged += nudFatiasEsfera_ValueChanged;
+            this.Controls.Add(this.nudFatiasEsfera);
 
 
 
@@ -190,8 +190,8 @@ namespace TrabalhoCG_Prop3
         private System.Windows.Forms.TrackBar trbRaio;
         private System.Windows.Forms.TrackBar trbAltura;
         private NumericUpDown nudFatias;
-        private NumericUpDown nudStacks;
-        private NumericUpDown nudSlices;
+        private NumericUpDown nudCamadas;
+        private NumericUpDown nudFatiasEsfera;
 
 
 
